@@ -4,6 +4,7 @@ mod cli;
 mod repl;
 mod session;
 mod commands;
+mod backend;
 
 use cli::Cli;
 use repl::run_repl;

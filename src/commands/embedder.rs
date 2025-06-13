@@ -12,3 +12,4 @@ pub fn handle(cmd: ModelsCommand, session: &mut Session) {
         }
     }
 }
+ 
