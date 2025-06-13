@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: MIT
+
 pub struct Session {
     pub provider: Option<String>,
     pub model: Option<String>,

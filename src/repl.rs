@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: MIT
 
 use crate::cli::Cli;
 use crate::commands::dispatch;

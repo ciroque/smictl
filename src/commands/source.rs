@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: MIT
+
 use crate::cli::DocumentCommand;
 use crate::session::Session;
 

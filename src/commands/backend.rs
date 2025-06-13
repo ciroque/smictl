@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: MIT
+
 use crate::cli::ProvidersCommand;
 use crate::session::Session;
 

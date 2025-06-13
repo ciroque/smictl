@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: MIT
+
 mod cli;
 mod repl;
 mod session;
