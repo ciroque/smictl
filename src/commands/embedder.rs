@@ -1,12 +1,12 @@
 // SPDX-License-Identifier: MIT
 
-use crate::cli::ModelsCommand;
+use crate::cli::EmbedderCommand;
 use crate::session::Session;
 
-pub fn handle(cmd: ModelsCommand, session: &mut Session) {
+pub fn handle(cmd: EmbedderCommand, session: &mut Session) {
     match cmd {
-        ModelsCommand::List => println!("Listing models..."),
-        ModelsCommand::Select { name } => {
+        EmbedderCommand::List => println!("Listing models..."),
+        EmbedderCommand::Select { name } => {
             println!("Selected model: {}", name);
             session.model = Some(name);
         }

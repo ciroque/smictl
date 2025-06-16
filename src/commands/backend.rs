@@ -1,12 +1,12 @@
 // SPDX-License-Identifier: MIT
 
-use crate::cli::ProvidersCommand;
+use crate::cli::BackendCommand;
 use crate::session::Session;
 
-pub fn handle(cmd: ProvidersCommand, session: &mut Session) {
+pub fn handle(cmd: BackendCommand, session: &mut Session) {
     match cmd {
-        ProvidersCommand::List => println!("Listing providers..."),
-        ProvidersCommand::Select { name } => {
+        BackendCommand::List => println!("Listing providers..."),
+        BackendCommand::Select { name } => {
             println!("Selected provider: {}", name);
             session.provider = Some(name);
         }

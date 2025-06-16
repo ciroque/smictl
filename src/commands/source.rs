@@ -1,15 +1,15 @@
 // SPDX-License-Identifier: MIT
 
-use crate::cli::DocumentCommand;
+use crate::cli::SourceCommand;
 use crate::session::Session;
 
-pub fn handle(cmd: DocumentCommand, session: &mut Session) {
+pub fn handle(cmd: SourceCommand, session: &mut Session) {
     match cmd {
-        DocumentCommand::Select { path } => {
+        SourceCommand::Select { path } => {
             println!("Selected document: {}", path);
             session.document = Some(path);
         }
-        DocumentCommand::GenerateEmbeddings => println!("Generating embeddings..."),
-        DocumentCommand::Store => println!("Storing embeddings..."),
+        SourceCommand::GenerateEmbeddings => println!("Generating embeddings..."),
+        SourceCommand::Store => println!("Storing embeddings..."),
     }
 }

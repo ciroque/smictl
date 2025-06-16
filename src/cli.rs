@@ -12,27 +12,27 @@ pub struct Cli {
 #[derive(Subcommand)]
 pub enum Command {
     #[command(subcommand)]
-    Backend(ProvidersCommand),
+    Backend(BackendCommand),
     #[command(subcommand)]
-    Embedder(ModelsCommand),
+    Embedder(EmbedderCommand),
     #[command(subcommand)]
-    Source(DocumentCommand),
+    Source(SourceCommand),
 }
 
 #[derive(Subcommand)]
-pub enum ProvidersCommand {
+pub enum BackendCommand {
     List,
     Select { name: String },
 }
 
 #[derive(Subcommand)]
-pub enum ModelsCommand {
+pub enum EmbedderCommand {
     List,
     Select { name: String },
 }
 
 #[derive(Subcommand)]
-pub enum DocumentCommand {
+pub enum SourceCommand {
     Select { path: String },
     GenerateEmbeddings,
     Store,
