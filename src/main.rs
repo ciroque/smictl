@@ -1,5 +1,3 @@
-// SPDX-License-Identifier: MIT
-
 mod cli;
 mod repl;
 mod session;
@@ -11,6 +9,7 @@ use repl::run_repl;
 use session::Session;
 use clap::Parser;
 use commands::dispatch;
+use rustyline::{Editor, history::DefaultHistory};
 
 fn main() {
     let args = Cli::parse();
@@ -19,6 +18,11 @@ fn main() {
         dispatch(args, &mut session);
     } else {
         println!("Entering REPL mode (type 'exit' to quit)");
-        run_repl();
+        let mut rl = Editor::<(), DefaultHistory>::new().expect("Failed to initialize line editor");
+        let _ = rl.load_history("history.txt");
+
+        run_repl(&mut rl);
+
+        let _ = rl.save_history("history.txt");
     }
 }

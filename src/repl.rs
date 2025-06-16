@@ -5,15 +5,17 @@ use crate::commands::dispatch;
 use crate::session::Session;
 use rustyline::Editor;
 use rustyline::history::DefaultHistory;
+
 use clap::Parser;
 
-pub fn run_repl() {
+pub fn run_repl(rl: &mut Editor<(), DefaultHistory>) {
     let mut rl = Editor::<(), DefaultHistory>::new().expect("Failed to initialize line editor");
     let mut session = Session::new();
 
     loop {
         match rl.readline("smictl> ") {
             Ok(line) => {
+                let _ = rl.add_history_entry(&line);
                 let trimmed = line.trim();
                 if trimmed == "exit" || trimmed == "quit" {
                     break;
