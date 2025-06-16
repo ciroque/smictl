@@ -23,6 +23,26 @@ pub enum Command {
 pub enum BackendCommand {
     List,
     Select { name: String },
+    Index(IndexArgs),
+}
+
+#[derive(clap::Args)]
+pub struct IndexArgs {
+    #[command(subcommand)]
+    pub cmd: IndexCommand,
+}
+
+#[derive(Subcommand)]
+pub enum IndexCommand {
+    Create {
+        prefix: String,
+        model: String,
+        version: Option<String>,
+    },
+    List,
+    Delete {
+        name: String,
+    },
 }
 
 #[derive(Subcommand)]
