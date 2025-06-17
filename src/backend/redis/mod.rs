@@ -1,4 +1,5 @@
-use crate::backend::{Backend, BackendError, AddEntryParams, QueryParams, IndexParams, MemoryEntry};
+use crate::backend::{Backend, BackendError};
+use crate::backend::types::{AddEntryParams, QueryParams, IndexParams, MemoryEntry};
 use async_trait::async_trait;
 use super::redis::client::RedisClient;
 

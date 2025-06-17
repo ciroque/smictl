@@ -1,6 +1,5 @@
 use async_trait::async_trait;
-
-use super::types::{AddEntryParams, QueryParams, IndexParams, MemoryEntry};
+use crate::backend::types::{AddEntryParams, IndexParams, MemoryEntry, QueryParams};
 
 #[derive(Debug)]
 pub enum BackendError {

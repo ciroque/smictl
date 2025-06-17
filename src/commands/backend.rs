@@ -1,16 +1,25 @@
 // SPDX-License-Identifier: MIT
 
-use crate::backend::{universal_index_name, Backend, IndexParams, MemoryLocator, RedisBackend};
 use crate::cli::{BackendCommand, IndexCommand};
 use crate::session::Session;
 use std::sync::Arc;
+use crate::backend::{Backend, RedisBackend};
+use crate::backend::types::{universal_index_name, MemoryLocator};
 
 pub async fn handle(cmd: BackendCommand, session: &mut Session) {
     match cmd {
 
         BackendCommand::Index(index_args) => match index_args.cmd {
-            IndexCommand::Create { prefix, model, version } => { 
-                handle_index_create(prefix, model, version, session).await
+            IndexCommand::Create {
+                prefix,
+                model,
+                version,
+                dim,
+                vector_type,
+                distance,
+                schema,
+            } => {
+                handle_index_create(prefix, model, version, dim, vector_type, distance, schema, session).await
             }
             IndexCommand::List => {
                 handle_index_list(session).await;
@@ -50,9 +59,13 @@ async fn handle_index_create(
     prefix: String,
     model: String,
     version: Option<String>,
+    dim: Option<usize>,
+    vector_type: Option<String>,
+    distance: Option<String>,
+    schema: Option<String>,
     session: &mut Session,
 ) {
-    use crate::backend::IndexParams;
+    use crate::backend::types::IndexParams;
 
     let memory_locator = MemoryLocator {
         index: prefix,
@@ -65,6 +78,7 @@ async fn handle_index_create(
             name: universal_index_name(&memory_locator, 0),
             model,
             dimensions: 1536,
+            schema: vec![],
         };
         
         match backend.create_index(index_params).await {
@@ -77,7 +91,7 @@ async fn handle_index_create(
 async fn handle_index_delete(name: String, session: &mut Session) {
     with_selected_backend(session, |backend| async move {
         match backend.delete_index(&*name).await {
-            Ok(_) => println!("Index delete successfully."),
+            Ok(_) => println!("Index '{}' deleted successfully.", name),
             Err(e) => eprintln!("Failed to delete index: {:?}", e),
         }
     }).await

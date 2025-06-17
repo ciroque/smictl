@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: MIT
 
 use clap::{Parser, Subcommand};
+use crate::backend::types::{FieldType, SchemaField};
 
 #[derive(Parser)]
 #[command(name = "smictl", version, about = "Semantic Memory Index Commander")]
@@ -38,6 +39,18 @@ pub enum IndexCommand {
         prefix: String,
         model: String,
         version: Option<String>,
+
+        #[clap(long)]
+        dim: Option<usize>,
+
+        #[clap(long, value_parser = ["HNSW", "FLAT"])]
+        vector_type: Option<String>,
+
+        #[clap(long, value_parser = ["COSINE", "L2", "IP"])]
+        distance: Option<String>,
+
+        #[clap(long)]
+        schema: Option<String>, // raw: "embedding:vector,text:text,model:tag"
     },
     List,
     Delete {

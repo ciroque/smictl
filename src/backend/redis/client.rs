@@ -7,7 +7,7 @@ use redis::{Client, RedisError};
 use std::sync::Arc;
 use tokio::sync::Mutex;
 
-use crate::backend::{IndexParams, MemoryEntry, AddEntryParams, QueryParams};
+use crate::backend::types::{IndexParams, MemoryEntry, AddEntryParams, QueryParams};
 
 #[derive(Clone)]
 pub struct RedisClient {
@@ -29,26 +29,15 @@ impl RedisClient {
         Ok(indexes)
     }
 
+
+    // backend select n
+    // backend index create <prefix> <model> <version> --dim 768 --vector-type FLAT --distance L2 --schema embedding:vector,text:text,model:tag,source:tag
+
     pub async fn create_index(&self, params: &IndexParams) -> Result<(), RedisError> {
         let mut conn = self.connection.lock().await;
-        let dim_str = params.dimensions.to_string();
 
-        let args = vec![
-            params.name.as_str(),
-            "ON", "HASH",
-            "PREFIX", "1", "mem:",
-            "SCHEMA",
-            "embedding", "VECTOR", "HNSW", "6",
-            "TYPE", "FLOAT32",
-            "DIM", &dim_str,
-            "DISTANCE_METRIC", "COSINE",
-            "text", "TEXT",
-            "model", "TAG",
-            "version", "TAG",
-            "tags", "TAG",
-            "source", "TAG",
-        ];
-
+        let args = params.to_redis_args();
+        
         redis::cmd("FT.CREATE")
             .arg(args)
             .query_async(&mut *conn)
