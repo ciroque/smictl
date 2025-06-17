@@ -1,7 +1,10 @@
 // SPDX-License-Identifier: MIT
 
+use crate::backend::Backend;
+use std::sync::Arc;
+
 pub struct Session {
-    pub provider: Option<String>,
+    pub backend: Option<Arc<dyn Backend + Send + Sync>>,
     pub model: Option<String>,
     pub document: Option<String>,
 }
@@ -9,7 +12,7 @@ pub struct Session {
 impl Session {
     pub fn new() -> Self {
         Self {
-            provider: None,
+            backend: None,
             model: None,
             document: None,
         }

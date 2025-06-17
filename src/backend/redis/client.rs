@@ -63,7 +63,12 @@ impl RedisClient {
         Err(RedisError::from((redis::ErrorKind::IoError, "not implemented")))
     }
 
-    pub async fn delete_index(&self, _name: &str) -> Result<(), RedisError> {
-        Err(RedisError::from((redis::ErrorKind::IoError, "not implemented")))
+    pub async fn delete_index(&self, name: &str) -> Result<(), RedisError> {
+        let mut conn = self.connection.lock().await;
+        redis::cmd("FT.DROPINDEX")
+            .arg(name)
+            .arg("DD") // DD = Drop the underlying hash data too
+            .query_async(&mut *conn)
+            .await
     }
 }

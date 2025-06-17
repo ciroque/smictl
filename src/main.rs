@@ -11,17 +11,18 @@ use clap::Parser;
 use commands::dispatch;
 use rustyline::{Editor, history::DefaultHistory};
 
-fn main() {
+#[tokio::main]
+async fn main() {
     let args = Cli::parse();
     if args.command.is_some() {
         let mut session = Session::new();
-        dispatch(args, &mut session);
+        dispatch(args, &mut session).await;
     } else {
         println!("Entering REPL mode (type 'exit' to quit)");
         let mut rl = Editor::<(), DefaultHistory>::new().expect("Failed to initialize line editor");
         let _ = rl.load_history("history.txt");
 
-        run_repl(&mut rl);
+        run_repl(&mut rl).await;
 
         let _ = rl.save_history("history.txt");
     }

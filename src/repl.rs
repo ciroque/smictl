@@ -8,7 +8,7 @@ use rustyline::history::DefaultHistory;
 
 use clap::Parser;
 
-pub fn run_repl(rl: &mut Editor<(), DefaultHistory>) {
+    pub async fn run_repl(rl: &mut Editor<(), DefaultHistory>) {
     let mut rl = Editor::<(), DefaultHistory>::new().expect("Failed to initialize line editor");
     let mut session = Session::new();
 
@@ -26,7 +26,7 @@ pub fn run_repl(rl: &mut Editor<(), DefaultHistory>) {
                 }
                 let args = std::iter::once("smictl").chain(tokens.iter().copied());
                 match Cli::try_parse_from(args) {
-                    Ok(parsed) => dispatch(parsed, &mut session),
+                    Ok(parsed) => dispatch(parsed, &mut session).await,
                     Err(e) => eprintln!("{}", e),
                 }
             }

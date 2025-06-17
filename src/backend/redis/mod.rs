@@ -10,7 +10,7 @@ pub struct RedisBackend {
 
 impl RedisBackend {
     pub async fn new() -> Result<Self, BackendError> {
-        let client = RedisClient::new("redis://127.0.0.1/")
+        let client = RedisClient::new("redis://127.0.0.1:6379/")
             .await
             .map_err(|e| BackendError::Internal(e.to_string()))?;
         Ok(Self { client })
@@ -27,8 +27,18 @@ impl Backend for RedisBackend {
         Err(BackendError::Internal("Not implemented".into()))
     }
 
-    async fn query(&self, _params: QueryParams) -> Result<Vec<MemoryEntry>, BackendError> {
-        Err(BackendError::Internal("Not implemented".into()))
+    async fn create_index(&self, indexParams: IndexParams) -> Result<(), BackendError> {
+        self.client
+            .create_index(&indexParams)
+            .await
+            .map_err(|e| BackendError::Internal(e.to_string()))
+    }
+
+    async fn delete_index(&self, name: &str) -> Result<(), BackendError> {
+        self.client
+            .delete_index(name)
+            .await
+            .map_err(|e| BackendError::Internal(e.to_string()))
     }
 
     async fn list_indexes(&self) -> Result<Vec<String>, BackendError> {
@@ -37,12 +47,8 @@ impl Backend for RedisBackend {
             .await
             .map_err(|e| BackendError::Internal(e.to_string()))
     }
-    
-    async fn create_index(&self, _params: IndexParams) -> Result<(), BackendError> {
-        Err(BackendError::Internal("Not implemented".into()))
-    }
 
-    async fn delete_index(&self, _name: &str) -> Result<(), BackendError> {
+    async fn query(&self, _params: QueryParams) -> Result<Vec<MemoryEntry>, BackendError> {
         Err(BackendError::Internal("Not implemented".into()))
     }
 }
