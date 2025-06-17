@@ -28,9 +28,9 @@ impl Backend for RedisBackend {
         Err(BackendError::Internal("Not implemented".into()))
     }
 
-    async fn create_index(&self, indexParams: IndexParams) -> Result<(), BackendError> {
+    async fn create_index(&self, index_params: IndexParams) -> Result<(), BackendError> {
         self.client
-            .create_index(&indexParams)
+            .create_index(&index_params)
             .await
             .map_err(|e| BackendError::Internal(e.to_string()))
     }

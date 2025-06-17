@@ -4,22 +4,22 @@ use crate::cli::{BackendCommand, IndexCommand};
 use crate::session::Session;
 use std::sync::Arc;
 use crate::backend::{Backend, RedisBackend};
-use crate::backend::types::{universal_index_name, MemoryLocator};
+use crate::backend::types::{universal_index_name, DistanceMetric, MemoryLocator, SchemaArg, VectorAlgorithm, VectorDataType};
 
 pub async fn handle(cmd: BackendCommand, session: &mut Session) {
     match cmd {
-
         BackendCommand::Index(index_args) => match index_args.cmd {
             IndexCommand::Create {
                 prefix,
                 model,
                 version,
                 dim,
-                vector_type,
+                algorithm,
                 distance,
+                dtype,
                 schema,
             } => {
-                handle_index_create(prefix, model, version, dim, vector_type, distance, schema, session).await
+                handle_index_create(prefix, model, version, dim, algorithm, distance, dtype, schema, session).await
             }
             IndexCommand::List => {
                 handle_index_list(session).await;
@@ -60,27 +60,30 @@ async fn handle_index_create(
     model: String,
     version: Option<String>,
     dim: Option<usize>,
-    vector_type: Option<String>,
-    distance: Option<String>,
-    schema: Option<String>,
+    algorithm: Option<VectorAlgorithm>,
+    distance: Option<DistanceMetric>,
+    dtype: Option<VectorDataType>,
+    mut schema: Option<SchemaArg>,
     session: &mut Session,
 ) {
-    use crate::backend::types::IndexParams;
+    use crate::backend::types::{IndexParams, universal_index_name};
 
     let memory_locator = MemoryLocator {
         index: prefix,
         model: model.clone(),
-        version,
+        version: version.clone(),
     };
-    
+
+    if let Some(ref mut s) = schema {
+        s.apply_vector_params(algorithm, distance, dtype, dim);
+    }
+
+    let index_params = IndexParams {
+        name: universal_index_name(&memory_locator, 0),
+        schema: schema.map(|s| s.0).unwrap_or_default(),
+    };
+
     with_selected_backend(session, |backend| async move {
-        let index_params = IndexParams {
-            name: universal_index_name(&memory_locator, 0),
-            model,
-            dimensions: 1536,
-            schema: vec![],
-        };
-        
         match backend.create_index(index_params).await {
             Ok(_) => println!("Index created successfully."),
             Err(e) => eprintln!("Failed to create index: {:?}", e),

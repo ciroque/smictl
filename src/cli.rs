@@ -1,7 +1,9 @@
 // SPDX-License-Identifier: MIT
 
 use clap::{Parser, Subcommand};
-use crate::backend::types::{FieldType, SchemaField};
+use crate::backend::types::{DistanceMetric, FieldType, SchemaArg, SchemaField, VectorAlgorithm, VectorDataType};
+
+use std::str::FromStr;
 
 #[derive(Parser)]
 #[command(name = "smictl", version, about = "Semantic Memory Index Commander")]
@@ -43,14 +45,17 @@ pub enum IndexCommand {
         #[clap(long)]
         dim: Option<usize>,
 
-        #[clap(long, value_parser = ["HNSW", "FLAT"])]
-        vector_type: Option<String>,
-
-        #[clap(long, value_parser = ["COSINE", "L2", "IP"])]
-        distance: Option<String>,
+        #[clap(long)]
+        algorithm: Option<VectorAlgorithm>, // ← renamed from vector_type
 
         #[clap(long)]
-        schema: Option<String>, // raw: "embedding:vector,text:text,model:tag"
+        distance: Option<DistanceMetric>,
+
+        #[clap(long)]
+        dtype: Option<VectorDataType>, // ← new: FLOAT32 or FLOAT64
+
+        #[clap(long, value_parser = SchemaArg::from_str)]
+        schema: Option<SchemaArg>,
     },
     List,
     Delete {

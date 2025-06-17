@@ -18,8 +18,6 @@ pub struct QueryParams {
 
 pub struct IndexParams {
     pub name: String,
-    pub model: String,
-    pub dimensions: usize,
     pub schema: Vec<SchemaField>,
 }
 
@@ -33,13 +31,9 @@ impl IndexParams {
         ];
 
         for field in &self.schema {
-            let field_args = field.to_redis_args();
-            println!("Field {:?} args: {:?}", field.name, field_args);
-            args.extend(field_args);
+            args.extend(field.to_redis_args());
         }
 
-        println!("{:?}", args);
-        
         args
     }
 }
