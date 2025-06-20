@@ -8,8 +8,10 @@ use rustyline::history::DefaultHistory;
 
 use clap::Parser;
 
-    pub async fn run_repl(rl: &mut Editor<(), DefaultHistory>) {
+pub async fn run_repl(rl: &mut Editor<(), DefaultHistory>) {
+    const HISTORY_FILE: &str = "history.txt";
     let mut rl = Editor::<(), DefaultHistory>::new().expect("Failed to initialize line editor");
+    rl.load_history(HISTORY_FILE).unwrap_or_default();
     let mut session = Session::new();
 
     loop {
@@ -32,5 +34,8 @@ use clap::Parser;
             }
             Err(_) => break,
         }
+
     }
+
+    rl.save_history(HISTORY_FILE).unwrap();
 }
