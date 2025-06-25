@@ -31,7 +31,7 @@ impl RedisClient {
 
 
     // backend select n
-    // backend index create disco sonnet5 v5 --dim 768 --algorithm flat --distance l2 --schema embedding:vector,text:text,model:tag,source:tag
+    // index create disco sonnet5 v5 --dim 768 --algorithm flat --distance l2 --dtype float64 --schema embedding:vector,text:text,model:tag,source:tag
 
     pub async fn create_index(&self, params: &IndexParams) -> Result<(), RedisError> {
         let mut conn = self.connection.lock().await;

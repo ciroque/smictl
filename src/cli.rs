@@ -20,19 +20,14 @@ pub enum Command {
     Embedder(EmbedderCommand),
     #[command(subcommand)]
     Source(SourceCommand),
+    #[command(subcommand)]
+    Index(IndexCommand),
 }
 
 #[derive(Subcommand)]
 pub enum BackendCommand {
     List,
     Select { name: String },
-    Index(IndexArgs),
-}
-
-#[derive(clap::Args)]
-pub struct IndexArgs {
-    #[command(subcommand)]
-    pub cmd: IndexCommand,
 }
 
 #[derive(Subcommand)]
@@ -41,10 +36,8 @@ pub enum IndexCommand {
         prefix: String,
         model: String,
         version: Option<String>,
-
         #[clap(long)]
         dim: Option<usize>,
-
         #[clap(long)]
         algorithm: Option<VectorAlgorithm>, // ← renamed from vector_type
 
