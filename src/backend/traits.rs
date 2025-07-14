@@ -22,4 +22,7 @@ pub trait Backend: Send + Sync {
     async fn list_indexes(&self) -> Result<Vec<String>, BackendError>;
 
     async fn query(&self, params: QueryParams) -> Result<Vec<MemoryEntry>, BackendError>;
+    
+    /// Returns connection information for the backend
+    fn get_connection_info(&self) -> String;
 }

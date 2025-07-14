@@ -14,6 +14,10 @@ pub async fn handle(cmd: BackendCommand, session: &mut Session) {
 
         BackendCommand::Select { name } => {
             handle_backend_select(session).await;
+        },
+        
+        BackendCommand::Info => {
+            handle_backend_info(session).await;
         }
     }
 }
@@ -34,3 +38,18 @@ async fn handle_backend_select(session: &mut Session) {
     }
 }
 
+async fn handle_backend_info(session: &mut Session) {
+    match &session.backend {
+        Some(backend) => {
+            println!("Current backend information:");
+            println!("  Type: {}", backend.name());
+            println!("  Connection: {}", backend.get_connection_info());
+            println!("  Status: Connected");
+            // You can add more specific information about the backend if needed
+        },
+        None => {
+            println!("No backend is currently selected.");
+            println!("Use 'smictl backend select' to select a backend.");
+        }
+    }
+}

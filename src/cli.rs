@@ -28,6 +28,7 @@ pub enum Command {
 pub enum BackendCommand {
     List,
     Select { name: String },
+    Info,
 }
 
 #[derive(Subcommand)]

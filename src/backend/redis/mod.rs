@@ -7,14 +7,16 @@ pub mod client;
 
 pub struct RedisBackend {
     client: RedisClient,
+    connection_url: String,
 }
 
 impl RedisBackend {
     pub async fn new() -> Result<Self, BackendError> {
-        let client = RedisClient::new("redis://127.0.0.1:6379/")
+        let connection_url = "redis://127.0.0.1:6379/".to_string();
+        let client = RedisClient::new(&connection_url)
             .await
             .map_err(|e| BackendError::Internal(e.to_string()))?;
-        Ok(Self { client })
+        Ok(Self { client, connection_url })
     }
 }
 
@@ -51,5 +53,9 @@ impl Backend for RedisBackend {
 
     async fn query(&self, _params: QueryParams) -> Result<Vec<MemoryEntry>, BackendError> {
         Err(BackendError::Internal("Not implemented".into()))
+    }
+    
+    fn get_connection_info(&self) -> String {
+        self.connection_url.clone()
     }
 }
